@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Tracking System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Robot Tracking System</h1>
+
+        <div class="connection-status">
+            <span id="connection-indicator" class="disconnected">●</span>
+            <span id="connection-text">Disconnected</span>
+            <input type="text" id="module-address" placeholder="Module Address" value="localhost:3000">
+            <button id="connect-btn">Connect</button>
+        </div>
+
+        <div class="main-content">
+            <div class="robot-management">
+                <h2>Robot Management</h2>
+                <div class="add-robot">
+                    <input type="text" id="new-robot-id" placeholder="Robot ID">
+                    <button id="add-robot-btn">Add Robot</button>
+                </div>
+                <div class="robot-list">
+                    <h3>Available Robots</h3>
+                    <ul id="robot-list"></ul>
+                </div>
+            </div>
+
+            <div class="robot-details" id="robot-details">
+                <h2>Robot Details</h2>
+                <div id="no-robot-selected">
+                    <p>Select a robot to view details</p>
+                </div>
+                <div id="robot-info" style="display: none;">
+                    <h3 id="robot-id-display"></h3>
+                    <div class="robot-actions">
+                        <div class="action-group">
+                            <h4>Update Distance</h4>
+                            <input type="number" id="update-distance-value" placeholder="Distance" min="0">
+                            <button id="update-distance-btn">Update</button>
+                        </div>
+                        <div class="action-group">
+                            <h4>Increment Distance</h4>
+                            <input type="number" id="increment-distance-value" placeholder="Increment" min="0">
+                            <button id="increment-distance-btn">Increment</button>
+                        </div>
+                        <div class="action-group">
+                            <h4>Say Hello</h4>
+                            <button id="say-hello-btn">Say Hello</button>
+                        </div>
+                    </div>
+                    <div class="robot-status">
+                        <h4>Current Distance</h4>
+                        <div class="distance-display">
+                            <span id="current-distance">0</span> units
+                        </div>
+                    </div>
+                    <div class="history-section">
+                        <h4>Distance History</h4>
+                        <div class="time-query">
+                            <input type="datetime-local" id="history-timestamp">
+                            <button id="query-history-btn">Query</button>
+                        </div>
+                        <div class="history-result">
+                            <p>Distance at selected time: <span id="history-distance">N/A</span> units</p>
+                        </div>
+                        <div class="history-log">
+                            <h4>History Log</h4>
+                            <ul id="history-log-list"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="console">
+            <h3>Console</h3>
+            <div id="console-output"></div>
+        </div>
+    </div>
+
+    <!-- Include SpacetimeDB TypeScript SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@clockworklabs/spacetimedb-sdk@0.8.0/dist/spacetimedb.min.js"></script>
+
+    <!-- Fallback for SpacetimeDB SDK -->
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            if (typeof SpacetimeDB === 'undefined') {
+                console.error('SpacetimeDB SDK not loaded. Trying alternative version...');
+                // Try loading an alternative version
+                var script = document.createElement('script');
+                script.src = 'https://unpkg.com/@clockworklabs/spacetimedb-sdk@0.8.0/dist/spacetimedb.min.js';
+                script.onload = function() {
+                    console.log('Alternative SpacetimeDB SDK loaded successfully');
+                    // Initialize the application after the SDK is loaded
+                    if (typeof SpacetimeDB !== 'undefined') {
+                        console.log('SpacetimeDB object is available');
+                    }
+                };
+                script.onerror = function() {
+                    console.error('Failed to load alternative SpacetimeDB SDK');
+                    document.getElementById('console-output').innerHTML += 
+                        '[' + new Date().toLocaleTimeString() + '] ' + 
+                        'Failed to load SpacetimeDB SDK. Please check your internet connection or try a different version.\n';
+                };
+                document.head.appendChild(script);
+            }
+        });
+    </script>
+
+    <!-- Include our application code -->
+    <script src="app.js"></script>
+</body>
+</html>
