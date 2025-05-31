@@ -38,6 +38,25 @@ pub fn update_distance(ctx: &ReducerContext, distance: u64) {
 }
 
 #[spacetimedb::reducer]
+pub fn increment_distance(ctx: &ReducerContext, increment: u64) {
+    // Check if any robot record exists
+    let existing_robots = ctx.db.robot().iter().collect::<Vec<_>>();
+
+    if existing_robots.is_empty() {
+        // If no robot exists, create a new one with the increment as the initial distance
+        ctx.db.robot().insert(Robot { distance: increment });
+    } else {
+        // If a robot exists, calculate the new distance by adding the increment
+        let current_robot = existing_robots[0].clone();
+        let new_distance = current_robot.distance + increment;
+
+        // Delete the old record and insert an updated one
+        ctx.db.robot().delete(current_robot);
+        ctx.db.robot().insert(Robot { distance: new_distance });
+    }
+}
+
+#[spacetimedb::reducer]
 pub fn say_hello(ctx: &ReducerContext) {
     // Get the robot's distance if it exists
     let robot_distance = ctx.db.robot().iter().next().map_or(0, |robot| robot.distance);
