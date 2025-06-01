@@ -67,7 +67,7 @@ function updateRobotList() {
 function selectRobot(robotId) {
     selectedRobotId = robotId;
     updateRobotList();
-    
+
     if (robotId) {
         noRobotSelected.style.display = 'none';
         robotInfo.style.display = 'block';
@@ -81,22 +81,22 @@ function selectRobot(robotId) {
 
 function updateRobotDetails() {
     if (!selectedRobotId || !robots.has(selectedRobotId)) return;
-    
+
     const robot = robots.get(selectedRobotId);
     currentDistance.textContent = robot.distance;
-    
+
     // Update history log
     updateHistoryLog();
 }
 
 function updateHistoryLog() {
     historyLogList.innerHTML = '';
-    
+
     if (!historyEntries.has(selectedRobotId)) return;
-    
+
     const entries = historyEntries.get(selectedRobotId);
     entries.sort((a, b) => b.timestamp - a.timestamp); // Sort by timestamp (newest first)
-    
+
     entries.forEach(entry => {
         const li = document.createElement('li');
         const date = new Date(entry.timestamp);
@@ -108,53 +108,77 @@ function updateHistoryLog() {
 // SpacetimeDB Client Setup
 function setupClient(address) {
     try {
+        // Check if SpacetimeDB is available
+        if (typeof SpacetimeDB === 'undefined') {
+            logToConsole('SpacetimeDB SDK is not loaded. Attempting to load it now...');
+
+            // Try to load the SDK directly
+            const sdkScript = document.createElement('script');
+            sdkScript.src = 'https://cdn.jsdelivr.net/npm/@clockworklabs/spacetimedb-sdk@0.7.0/dist/spacetimedb.min.js';
+
+            sdkScript.onload = function() {
+                if (typeof SpacetimeDB !== 'undefined') {
+                    logToConsole('SpacetimeDB SDK loaded successfully. Please try connecting again.');
+                } else {
+                    logToConsole('Failed to load SpacetimeDB SDK. Please check your internet connection and try again, or contact support if the issue persists.');
+                }
+            };
+
+            sdkScript.onerror = function() {
+                logToConsole('Failed to load SpacetimeDB SDK. Please check your internet connection and try again, or contact support if the issue persists.');
+            };
+
+            document.head.appendChild(sdkScript);
+            return false;
+        }
+
         // Create a new SpacetimeDB client
         client = new SpacetimeDB.Client();
-        
+
         // Set up event handlers
         client.on('connected', () => {
             logToConsole('Connected to SpacetimeDB module');
             updateConnectionStatus(true);
         });
-        
+
         client.on('disconnected', () => {
             logToConsole('Disconnected from SpacetimeDB module');
             updateConnectionStatus(false);
         });
-        
+
         client.on('error', (error) => {
             logToConsole(`Error: ${error.message}`);
         });
-        
+
         // Subscribe to robot table updates
         client.subscribe('robot', (robotData) => {
             logToConsole('Received robot table update');
-            
+
             // Update our local robots map
             robotData.forEach(robot => {
                 robots.set(robot.robot_id, robot);
             });
-            
+
             updateRobotList();
-            
+
             // Update details if the selected robot was updated
             if (selectedRobotId && robots.has(selectedRobotId)) {
                 updateRobotDetails();
             }
         });
-        
+
         // Subscribe to robot_history table updates
         client.subscribe('robot_history', (historyData) => {
             logToConsole('Received robot history update');
-            
+
             // Process each history entry
             historyData.forEach(entry => {
                 if (!historyEntries.has(entry.robot_id)) {
                     historyEntries.set(entry.robot_id, []);
                 }
-                
+
                 const entries = historyEntries.get(entry.robot_id);
-                
+
                 // Check if this entry already exists
                 const existingIndex = entries.findIndex(e => e.timestamp === entry.timestamp);
                 if (existingIndex >= 0) {
@@ -163,17 +187,17 @@ function setupClient(address) {
                     entries.push(entry);
                 }
             });
-            
+
             // Update history log if the selected robot's history was updated
             if (selectedRobotId) {
                 updateHistoryLog();
             }
         });
-        
+
         // Connect to the module
         logToConsole(`Connecting to ${address}...`);
         client.connect(address);
-        
+
         return true;
     } catch (error) {
         logToConsole(`Failed to setup client: ${error.message}`);
@@ -186,7 +210,7 @@ function disconnectClient() {
         client.disconnect();
         client = null;
     }
-    
+
     // Reset application state
     robots.clear();
     historyEntries.clear();
@@ -216,7 +240,7 @@ addRobotBtn.addEventListener('click', () => {
         logToConsole('Please enter a robot ID');
         return;
     }
-    
+
     // Initialize the robot with distance 0
     if (client && connected) {
         client.call('update_distance', [robotId, 0])
@@ -237,13 +261,13 @@ updateDistanceBtn.addEventListener('click', () => {
         logToConsole('No robot selected');
         return;
     }
-    
+
     const distance = parseInt(updateDistanceValue.value);
     if (isNaN(distance) || distance < 0) {
         logToConsole('Please enter a valid distance (non-negative number)');
         return;
     }
-    
+
     if (client && connected) {
         client.call('update_distance', [selectedRobotId, distance])
             .then(() => {
@@ -263,13 +287,13 @@ incrementDistanceBtn.addEventListener('click', () => {
         logToConsole('No robot selected');
         return;
     }
-    
+
     const increment = parseInt(incrementDistanceValue.value);
     if (isNaN(increment) || increment < 0) {
         logToConsole('Please enter a valid increment (non-negative number)');
         return;
     }
-    
+
     if (client && connected) {
         client.call('increment_distance', [selectedRobotId, increment])
             .then(() => {
@@ -289,7 +313,7 @@ sayHelloBtn.addEventListener('click', () => {
         logToConsole('No robot selected');
         return;
     }
-    
+
     if (client && connected) {
         client.call('say_hello', [selectedRobotId])
             .then(() => {
@@ -308,13 +332,13 @@ queryHistoryBtn.addEventListener('click', () => {
         logToConsole('No robot selected');
         return;
     }
-    
+
     const timestamp = new Date(historyTimestamp.value).getTime();
     if (isNaN(timestamp)) {
         logToConsole('Please select a valid timestamp');
         return;
     }
-    
+
     if (client && connected) {
         client.call('get_distance_at_time', [selectedRobotId, timestamp])
             .then(distance => {

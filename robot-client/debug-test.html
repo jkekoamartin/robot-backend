@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpacetimeDB Debug Tools Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        h1, h2, h3 {
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .test-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        
+        .note {
+            background-color: #fffde7;
+            padding: 10px;
+            border-left: 4px solid #ffd600;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SpacetimeDB Debug Tools Test</h1>
+        
+        <div class="note">
+            <strong>Note:</strong> This page demonstrates how to use the SpacetimeDB debug tools. 
+            The debug console should appear in the top-right corner of the page. Click the "Debug Console" button to toggle it.
+        </div>
+        
+        <div class="test-section">
+            <h2>1. Browser Compatibility Test</h2>
+            <p>Test if your browser is compatible with the SpacetimeDB client application.</p>
+            <button onclick="window.debugTools.checkBrowserCompatibility()">Run Browser Compatibility Test</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>2. Network Connectivity Test</h2>
+            <p>Test if your device can connect to the CDNs used by the application.</p>
+            <button onclick="window.debugTools.checkNetworkConnectivity()">Run Network Connectivity Test</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>3. SpacetimeDB SDK Loading Test</h2>
+            <p>Test if the SpacetimeDB SDK can be loaded correctly.</p>
+            <button onclick="window.debugTools.testSDKLoading()">Test SDK Loading</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>4. Connection Test</h2>
+            <p>Test connection to a SpacetimeDB module.</p>
+            <input type="text" id="module-address" placeholder="Module Address" value="localhost:3000" style="padding: 8px; margin-right: 10px;">
+            <button onclick="window.debugTools.testConnection(document.getElementById('module-address').value)">Test Connection</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>5. Robot Operations Test</h2>
+            <p>Test basic robot operations (create, update, increment, query).</p>
+            <input type="text" id="operations-address" placeholder="Module Address" value="localhost:3000" style="padding: 8px; margin-right: 10px;">
+            <button onclick="window.debugTools.testRobotOperations(document.getElementById('operations-address').value)">Test Robot Operations</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>6. Run All Tests</h2>
+            <p>Run all diagnostic tests in sequence.</p>
+            <button onclick="window.debugTools.runAllTests()">Run All Tests</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>7. Custom Debug Messages</h2>
+            <p>Send custom debug messages to the console.</p>
+            <button onclick="window.debugTools.logDebug('This is an info message', 'info')">Info Message</button>
+            <button onclick="window.debugTools.logDebug('This is a success message', 'success')">Success Message</button>
+            <button onclick="window.debugTools.logDebug('This is a warning message', 'warn')">Warning Message</button>
+            <button onclick="window.debugTools.logDebug('This is an error message', 'error')">Error Message</button>
+        </div>
+        
+        <h2>Using Debug Tools in Your Code</h2>
+        <p>You can access all debug functions through the <code>window.debugTools</code> object:</p>
+        <pre><code>// Run all diagnostic tests
+window.debugTools.runAllTests();
+
+// Test if the SpacetimeDB SDK is loaded correctly
+window.debugTools.testSDKLoading();
+
+// Test connection to the SpacetimeDB module
+window.debugTools.testConnection('localhost:3000');
+
+// Log a custom debug message
+window.debugTools.logDebug('Custom debug message', 'info');</code></pre>
+        
+        <p>For more information, see the <a href="debug-README.md">Debug Tools README</a>.</p>
+    </div>
+    
+    <!-- Mock app variables for testing -->
+    <script>
+        // Create mock app variables to test inspectAppState
+        window.client = null;
+        window.connected = false;
+        window.robots = new Map();
+        window.robots.set('robot-1', { robot_id: 'robot-1', distance: 100 });
+        window.robots.set('robot-2', { robot_id: 'robot-2', distance: 200 });
+        window.selectedRobotId = 'robot-1';
+        window.historyEntries = new Map();
+        window.historyEntries.set('robot-1', [
+            { robot_id: 'robot-1', timestamp: Date.now() - 3000, distance: 50 },
+            { robot_id: 'robot-1', timestamp: Date.now() - 2000, distance: 75 },
+            { robot_id: 'robot-1', timestamp: Date.now() - 1000, distance: 100 }
+        ]);
+    </script>
+    
+    <!-- Include the debug script -->
+    <script src="debug.js"></script>
+    
+    <!-- Add a button to inspect app state -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const testSection = document.createElement('div');
+            testSection.className = 'test-section';
+            testSection.innerHTML = `
+                <h2>8. Inspect Application State</h2>
+                <p>Inspect the current state of the application.</p>
+                <button onclick="window.debugTools.inspectAppState()">Inspect App State</button>
+            `;
+            document.querySelector('.container').appendChild(testSection);
+        });
+    </script>
+</body>
+</html>

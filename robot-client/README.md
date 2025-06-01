@@ -95,6 +95,25 @@ If you encounter connection issues:
 3. Look for error messages in the console output
 4. Check your browser's developer console for additional error information
 
+### Debug Tools
+
+The client application includes a set of debug tools to help diagnose and troubleshoot issues:
+
+1. **Debug Console**: A visual console that displays detailed logs and provides testing functions
+2. **SDK Loading Tests**: Verify that the SpacetimeDB SDK is loaded correctly
+3. **Connection Tests**: Test connectivity to the SpacetimeDB module
+4. **Robot Operation Tests**: Test basic robot operations (create, update, increment, query)
+5. **Browser Compatibility Checks**: Verify that your browser supports all required features
+6. **Network Connectivity Tests**: Check if your device can connect to the required CDNs
+
+To use the debug tools:
+
+1. Open the client application in your browser
+2. Click the "Debug Console" button in the top-right corner
+3. Use the buttons in the debug console to run tests and view logs
+
+For more information, see the [Debug Tools README](debug-README.md) or try the [Debug Tools Test Page](debug-test.html).
+
 ## Development
 
 ### SpacetimeDB SDK
@@ -102,12 +121,16 @@ If you encounter connection issues:
 This client uses the SpacetimeDB TypeScript SDK. The SDK is loaded from a CDN:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@clockworklabs/spacetimedb-sdk@0.8.0/dist/spacetimedb.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clockworklabs/spacetimedb-sdk@0.7.0/dist/spacetimedb.min.js"></script>
 ```
 
-Note: We're using version 0.8.0 of the SDK, which is known to work with this client application. The client also includes a fallback mechanism that will attempt to load the SDK from an alternative CDN (unpkg.com) if the primary CDN fails.
+Note: We're using version 0.7.0 of the SDK, which is known to work with this client application. The client includes a robust loading mechanism with multiple fallbacks:
 
-If you encounter the error "Can't find variable: SpacetimeDB", the application will automatically try to load the SDK from the alternative CDN. If that also fails, check your internet connection and make sure you can access the CDN URLs.
+1. The SDK is loaded directly in the HTML file from the primary CDN (jsdelivr)
+2. If the SDK fails to load or the SpacetimeDB object is not defined, it tries to load from an alternative CDN (unpkg.com)
+3. If the user clicks the Connect button and the SDK is still not loaded, the application will attempt to load it on demand
+
+If you encounter the error "Can't find variable: SpacetimeDB", the application will automatically try to load the SDK using the fallback mechanisms described above. If all attempts fail, check your internet connection, make sure you can access the CDN URLs, and try using a different browser.
 
 For more information about the SDK, refer to the [SpacetimeDB TypeScript SDK documentation](https://spacetimedb.com/docs/sdks/typescript/quickstart).
 

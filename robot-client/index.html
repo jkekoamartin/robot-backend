@@ -83,36 +83,52 @@
         </div>
     </div>
 
-    <!-- Include SpacetimeDB TypeScript SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@clockworklabs/spacetimedb-sdk@0.8.0/dist/spacetimedb.min.js"></script>
+    <!-- SpacetimeDB SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@clockworklabs/spacetimedb-sdk@0.7.0/dist/spacetimedb.min.js"></script>
 
-    <!-- Fallback for SpacetimeDB SDK -->
+    <!-- Console Logger -->
     <script>
+        // Function to log messages to the console output
+        function logToConsole(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            const consoleOutput = document.getElementById('console-output');
+            if (consoleOutput) {
+                consoleOutput.innerHTML += `[${timestamp}] ${message}\n`;
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            } else {
+                console.log(`[${timestamp}] ${message}`);
+            }
+        }
+
+        // Log initialization message
         window.addEventListener('DOMContentLoaded', function() {
+            logToConsole('Robot Tracking System Client initialized');
+
+            // Check if SpacetimeDB is available
             if (typeof SpacetimeDB === 'undefined') {
-                console.error('SpacetimeDB SDK not loaded. Trying alternative version...');
-                // Try loading an alternative version
-                var script = document.createElement('script');
-                script.src = 'https://unpkg.com/@clockworklabs/spacetimedb-sdk@0.8.0/dist/spacetimedb.min.js';
-                script.onload = function() {
-                    console.log('Alternative SpacetimeDB SDK loaded successfully');
-                    // Initialize the application after the SDK is loaded
+                logToConsole('SpacetimeDB SDK is not loaded. Trying alternative source...');
+
+                // Try alternative source
+                const alternativeScript = document.createElement('script');
+                alternativeScript.src = 'https://unpkg.com/@clockworklabs/spacetimedb-sdk@0.7.0/dist/spacetimedb.min.js';
+                alternativeScript.onload = function() {
                     if (typeof SpacetimeDB !== 'undefined') {
-                        console.log('SpacetimeDB object is available');
+                        logToConsole('SpacetimeDB SDK loaded successfully from alternative source');
+                    } else {
+                        logToConsole('Failed to load SpacetimeDB SDK from alternative source');
                     }
                 };
-                script.onerror = function() {
-                    console.error('Failed to load alternative SpacetimeDB SDK');
-                    document.getElementById('console-output').innerHTML += 
-                        '[' + new Date().toLocaleTimeString() + '] ' + 
-                        'Failed to load SpacetimeDB SDK. Please check your internet connection or try a different version.\n';
-                };
-                document.head.appendChild(script);
+                document.head.appendChild(alternativeScript);
+            } else {
+                logToConsole('SpacetimeDB SDK loaded successfully');
             }
         });
     </script>
 
-    <!-- Include our application code -->
+    <!-- Application Script -->
     <script src="app.js"></script>
+
+    <!-- Debug Tools Script -->
+    <script src="debug.js"></script>
 </body>
 </html>

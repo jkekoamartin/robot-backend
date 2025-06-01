@@ -82,7 +82,7 @@ The client component is a web application that:
 
 3. Enter the SpacetimeDB module address and click "Connect"
 
-4. If you encounter the error "Can't find variable: SpacetimeDB", the application will automatically try to load the SDK from an alternative CDN. If that also fails, check your internet connection and make sure you can access the CDN URLs.
+4. If you encounter the error "Can't find variable: SpacetimeDB", the application will automatically try to load the SDK using its fallback mechanisms. The client includes a robust loading system that tries multiple sources and provides clear error messages. If all attempts fail, check your internet connection, make sure you can access the CDN URLs, and try using a different browser.
 
 For more detailed instructions, see the [client README](robot-client/README.md).
 
@@ -102,6 +102,25 @@ In addition to the automated tests, the project includes two manual test scripts
 
 1. **test_robot.sh**: A simulation script that demonstrates how the module would be used
 2. **test_robot_cli.sh**: A script that uses the actual SpacetimeDB CLI to interact with a deployed module
+
+### Client Debug Tools
+
+The client application includes a comprehensive set of debug tools to help diagnose and troubleshoot issues:
+
+1. **Visual Debug Console**: A toggleable console that displays detailed logs and provides testing functions
+2. **SDK Loading Tests**: Verify that the SpacetimeDB SDK is loaded correctly
+3. **Connection Tests**: Test connectivity to the SpacetimeDB module
+4. **Robot Operation Tests**: Test basic robot operations (create, update, increment, query)
+5. **Browser Compatibility Checks**: Verify that your browser supports all required features
+6. **Network Connectivity Tests**: Check if your device can connect to the required CDNs
+
+To use the debug tools:
+
+1. Open the client application in your browser
+2. Click the "Debug Console" button in the top-right corner
+3. Use the buttons in the debug console to run tests and view logs
+
+For more information, see the [Debug Tools README](robot-client/debug-README.md) or try the [Debug Tools Test Page](robot-client/debug-test.html).
 
 To run the simulation script:
 ```
