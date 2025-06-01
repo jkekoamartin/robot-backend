@@ -81,6 +81,7 @@ A web-based client application for the Robot Tracking System built with Spacetim
 ## Console Output
 
 The console at the bottom of the page displays:
+- Client application version (displayed on startup)
 - Connection status messages
 - Results of reducer calls
 - Error messages
@@ -100,6 +101,8 @@ If you encounter connection issues:
 The client application includes a set of debug tools to help diagnose and troubleshoot issues:
 
 1. **Debug Console**: A visual console that displays detailed logs and provides testing functions
+   - Shows the debug tools version in the console header
+   - Displays version information on initialization
 2. **SDK Loading Tests**: Verify that the SpacetimeDB SDK is loaded correctly
 3. **Connection Tests**: Test connectivity to the SpacetimeDB module
 4. **Robot Operation Tests**: Test basic robot operations (create, update, increment, query)

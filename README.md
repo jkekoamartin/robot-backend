@@ -4,10 +4,12 @@ A complete robot tracking system built with SpacetimeDB, consisting of a server-
 
 ## Project Structure
 
-The project is organized into two main components:
+The project is organized into these main components:
 
 - **robot-server**: The server-side SpacetimeDB module written in Rust
-- **robot-client**: The client-side web application written in HTML, CSS, and JavaScript
+- **robot-client**: The client-side web application with two implementations:
+  - JavaScript client: A vanilla JavaScript implementation
+  - TypeScript client: A type-safe implementation using TypeScript and modern build tools
 
 ## Features
 
@@ -56,19 +58,35 @@ The server component is a SpacetimeDB module written in Rust that:
 
 ## Client Component (robot-client)
 
-The client component is a web application that:
+The client component is available in two implementations: a vanilla JavaScript version and a TypeScript version. Both implementations provide the same functionality:
 
-1. Connects to the SpacetimeDB module
-2. Provides a user interface to:
+1. Connect to the SpacetimeDB module
+2. Provide a user interface to:
    - Add and manage multiple robots
    - Update and increment robot distances
    - View real-time distance updates
    - Query historical distance data
    - View a log of distance changes
 
+### JavaScript Client
+
+The JavaScript client is a simple implementation using vanilla JavaScript, HTML, and CSS. It's easy to set up and run without any build steps.
+
+### TypeScript Client
+
+The TypeScript client is a more robust implementation that offers:
+
+- Type safety with TypeScript
+- Modern build system with webpack
+- Better error handling
+- Improved code organization
+- Proper module imports
+
 ### Client Setup
 
-1. Use the provided script to serve the client files:
+#### JavaScript Client Setup
+
+1. Use the provided script to serve the JavaScript client files:
    ```
    chmod +x robot-client/serve.sh
    ./robot-client/serve.sh
@@ -84,7 +102,42 @@ The client component is a web application that:
 
 4. If you encounter the error "Can't find variable: SpacetimeDB", the application will automatically try to load the SDK using its fallback mechanisms. The client includes a robust loading system that tries multiple sources and provides clear error messages. If all attempts fail, check your internet connection, make sure you can access the CDN URLs, and try using a different browser.
 
-For more detailed instructions, see the [client README](robot-client/README.md).
+For more detailed instructions, see the [JavaScript client README](robot-client/README.md).
+
+#### TypeScript Client Setup
+
+Option 1: Using the provided script:
+   ```
+   chmod +x robot-client/ts-client/serve.sh
+   ./robot-client/ts-client/serve.sh
+   ```
+   This script will check for Node.js and npm, install dependencies if needed, and start the development server.
+
+Option 2: Manual setup:
+1. Navigate to the TypeScript client directory:
+   ```
+   cd robot-client/ts-client
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   # or
+   yarn install
+   ```
+
+3. Start the development server:
+   ```
+   npm start
+   # or
+   yarn start
+   ```
+
+4. Open the client in a web browser at `http://localhost:8080`
+
+5. Enter the SpacetimeDB module address and click "Connect"
+
+For more detailed instructions, see the [TypeScript client README](robot-client/ts-client/README.md).
 
 ## Testing
 
@@ -147,11 +200,24 @@ The server code is in `robot-server/src/lib.rs`. Key components:
 
 ### Client Development
 
-The client code consists of:
+#### JavaScript Client
+
+The JavaScript client code consists of:
 
 - `index.html`: The main HTML structure and UI elements
 - `styles.css`: CSS styles for the application
 - `app.js`: Client-side JavaScript code that interacts with the SpacetimeDB module
+
+#### TypeScript Client
+
+The TypeScript client code consists of:
+
+- `src/index.ts`: Main application logic written in TypeScript
+- `src/models.ts`: TypeScript interfaces for the data structures
+- `src/index.html`: HTML template
+- `webpack.config.js`: Webpack configuration for bundling
+- `tsconfig.json`: TypeScript configuration
+- `package.json`: Project dependencies and scripts
 
 ## SpacetimeDB Resources
 

@@ -3,6 +3,7 @@
 
 // Debug configuration
 const DEBUG_CONFIG = {
+    version: '1.1.0', // Debug tools version (should match APP_VERSION in app.js)
     logToConsole: true,
     logToPage: true,
     verboseLogging: true,
@@ -19,7 +20,7 @@ function initDebugEnvironment() {
         createDebugPanel();
     }
 
-    logDebug('Debug environment initialized');
+    logDebug(`Debug Tools v${DEBUG_CONFIG.version} initialized`);
     logDebug(`User Agent: ${navigator.userAgent}`);
     logDebug(`Page URL: ${window.location.href}`);
 
@@ -60,7 +61,7 @@ function createDebugPanel() {
     `;
 
     const debugHeader = document.createElement('div');
-    debugHeader.textContent = 'SpacetimeDB Debug Console';
+    debugHeader.textContent = `SpacetimeDB Debug Console v${DEBUG_CONFIG.version}`;
     debugHeader.style.cssText = `
         font-weight: bold;
         font-size: 14px;

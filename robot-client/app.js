@@ -1,4 +1,5 @@
 // Robot Tracking System Client Application
+const APP_VERSION = '1.1.0'; // Version number for the client application
 
 // DOM Elements
 const connectionIndicator = document.getElementById('connection-indicator');
@@ -354,5 +355,5 @@ queryHistoryBtn.addEventListener('click', () => {
 });
 
 // Initialize the application
-logToConsole('Robot Tracking System Client initialized');
+logToConsole(`Robot Tracking System Client v${APP_VERSION} initialized`);
 logToConsole('Please connect to a SpacetimeDB module to begin');
